@@ -56,9 +56,11 @@ def _parse_args(parser: "HfArgumentParser", args: Optional[Dict[str, Any]] = Non
     if args is not None:
         return parser.parse_dict(args)
 
+    # 解析yaml文件里的超参
     if len(sys.argv) == 2 and (sys.argv[1].endswith(".yaml") or sys.argv[1].endswith(".yml")):
         return parser.parse_yaml_file(os.path.abspath(sys.argv[1]))
 
+    # 解析json文件里面的超参
     if len(sys.argv) == 2 and sys.argv[1].endswith(".json"):
         return parser.parse_json_file(os.path.abspath(sys.argv[1]))
 
@@ -144,6 +146,7 @@ def _check_extra_dependencies(
 
 def _parse_train_args(args: Optional[Dict[str, Any]] = None) -> _TRAIN_CLS:
     parser = HfArgumentParser(_TRAIN_ARGS)
+    breakpoint()
     return _parse_args(parser, args)
 
 

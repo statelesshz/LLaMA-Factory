@@ -73,8 +73,8 @@ class Command(str, Enum):
     HELP = "help"
 
 
-def main():
-    command = sys.argv.pop(1) if len(sys.argv) != 1 else Command.HELP
+def main():  # llamafactory-cli train tests/qwen2.5_full_sft.yaml
+    command = sys.argv.pop(1) if len(sys.argv) != 1 else Command.HELP # command = train, sys.argv = [llamafactory-cli, tests/qwen2.5_full_sft.yaml]
     if command == Command.API:
         run_api()
     elif command == Command.CHAT:
@@ -102,13 +102,13 @@ def main():
                     master_addr=master_addr,
                     master_port=master_port,
                     file_name=launcher.__file__,
-                    args=" ".join(sys.argv[1:]),
+                    args=" ".join(sys.argv[1:]),  # tests/qwen2.5_full_sft.yaml
                 ),
                 shell=True,
             )
             sys.exit(process.returncode)
         else:
-            run_exp()
+            run_exp() # 单卡走这里
     elif command == Command.WEBDEMO:
         run_web_demo()
     elif command == Command.WEBUI:
