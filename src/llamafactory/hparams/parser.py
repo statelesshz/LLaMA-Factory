@@ -146,7 +146,6 @@ def _check_extra_dependencies(
 
 def _parse_train_args(args: Optional[Dict[str, Any]] = None) -> _TRAIN_CLS:
     parser = HfArgumentParser(_TRAIN_ARGS)
-    breakpoint()
     return _parse_args(parser, args)
 
 
@@ -168,6 +167,7 @@ def get_train_args(args: Optional[Dict[str, Any]] = None) -> _TRAIN_CLS:
         _set_transformers_logging()
 
     # Check arguments
+    # 除了pt阶段外都需要指定template
     if finetuning_args.stage != "pt" and data_args.template is None:
         raise ValueError("Please specify which `template` to use.")
 

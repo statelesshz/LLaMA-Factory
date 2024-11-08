@@ -271,6 +271,7 @@ def _register_template(
 
 
 def _add_or_replace_eos_token(tokenizer: "PreTrainedTokenizer", eos_token: str) -> None:
+    # 这部分代码对于qwen2是多余的
     is_added = tokenizer.eos_token_id is None
     num_added_tokens = tokenizer.add_special_tokens({"eos_token": eos_token})
 
@@ -369,6 +370,7 @@ def get_template_and_fix_tokenizer(tokenizer: "PreTrainedTokenizer", data_args: 
     if data_args.train_on_prompt and template.efficient_eos:
         raise ValueError("Current template does not support `train_on_prompt`.")
 
+    # 先不考虑tool call
     if data_args.tool_format is not None:
         logger.info_rank0(f"Using tool format: {data_args.tool_format}.")
         eos_slots = [] if template.efficient_eos else [{"eos_token"}]
@@ -400,7 +402,7 @@ def get_template_and_fix_tokenizer(tokenizer: "PreTrainedTokenizer", data_args: 
 
     if tokenizer.chat_template is None or template.replace_jinja_template:
         try:
-            tokenizer.chat_template = _get_jinja_template(template, tokenizer)
+            tokenizer.chat_template = _get_jinja_template(template, tokenizer)  # tokenizer.apply_chat_template
         except ValueError as e:
             logger.info_rank0(f"Cannot add this chat template to tokenizer: {e}.")
 

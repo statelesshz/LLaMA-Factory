@@ -189,7 +189,7 @@ def _get_preprocessed_dataset(
     if dataset is None:
         return None
 
-    preprocess_func, print_function = get_preprocess_and_print_func(
+    preprocess_func, print_function = get_preprocess_and_print_func( # preprocess_func, print_func
         data_args, stage, template, tokenizer, processor, do_generate=(training_args.predict_with_generate and is_eval)
     )
     column_names = list(next(iter(dataset)).keys())
@@ -234,7 +234,7 @@ def get_dataset(
     r"""
     Gets the train dataset and optionally gets the evaluation dataset.
     """
-    # Load tokenized dataset
+    # Load tokenized dataset，支持数据预先token化后本地加载
     if data_args.tokenized_path is not None:
         if has_tokenized_data(data_args.tokenized_path):
             logger.warning_rank0("Loading dataset from disk will ignore other data arguments.")
@@ -257,11 +257,11 @@ def get_dataset(
             raise ValueError("Turn off `streaming` when saving dataset to disk.")
 
     # Load and preprocess dataset
-    with training_args.main_process_first(desc="load dataset"):
+    with training_args.main_process_first(desc="load dataset"): # 只在main进程执行
         dataset = _get_merged_dataset(data_args.dataset, model_args, data_args, training_args, stage)
         eval_dataset = _get_merged_dataset(data_args.eval_dataset, model_args, data_args, training_args, stage)
 
-    with training_args.main_process_first(desc="pre-process dataset"):
+    with training_args.main_process_first(desc="pre-process dataset"): # 预处理datasets
         dataset = _get_preprocessed_dataset(
             dataset, data_args, training_args, stage, template, tokenizer, processor, is_eval=False
         )

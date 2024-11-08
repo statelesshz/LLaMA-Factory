@@ -50,9 +50,9 @@ def _get_init_kwargs(model_args: "ModelArguments") -> Dict[str, Any]:
     Note: including inplace operation of model_args.
     """
     skip_check_imports()
-    model_args.model_name_or_path = try_download_model_from_other_hub(model_args)
+    model_args.model_name_or_path = try_download_model_from_other_hub(model_args) # 支持从openmind/modelscope下载模型权重
     return {
-        "trust_remote_code": True,
+        "trust_remote_code": True, # 直接trust_remote_code可能有安全问题
         "cache_dir": model_args.cache_dir,
         "revision": model_args.model_revision,
         "token": model_args.hf_hub_token,
@@ -95,7 +95,7 @@ def load_tokenizer(model_args: "ModelArguments") -> "TokenizerModule":
             model_args.resize_vocab = True
             logger.warning_rank0("New tokens have been added, changed `resize_vocab` to True.")
 
-    patch_tokenizer(tokenizer)
+    patch_tokenizer(tokenizer)  # 这部分暂时不需要
     try:
         processor = AutoProcessor.from_pretrained(model_args.model_name_or_path, **init_kwargs)
         patch_processor(processor, config, tokenizer, model_args)

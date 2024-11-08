@@ -41,9 +41,9 @@ def run_sft(
     generating_args: "GeneratingArguments",
     callbacks: Optional[List["TrainerCallback"]] = None,
 ):
-    tokenizer_module = load_tokenizer(model_args)
+    tokenizer_module = load_tokenizer(model_args)  # 就是一个包含tokenizer和processor的字典，名字叫tokenizer_module不合适吧？
     tokenizer = tokenizer_module["tokenizer"]
-    template = get_template_and_fix_tokenizer(tokenizer, data_args)
+    template = get_template_and_fix_tokenizer(tokenizer, data_args) # template跟data_args绑定，是否需要跟model绑定呢？这就是预处理阶段要处理的事情
     dataset_module = get_dataset(template, model_args, data_args, training_args, stage="sft", **tokenizer_module)
     model = load_model(tokenizer, model_args, finetuning_args, training_args.do_train)
 
